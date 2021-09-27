@@ -93,7 +93,7 @@ function parse(cfg, parent = [], pName = '') {
       }
       defs = `${' * ```\n * // 默认请求参数\n * // default request data \n' + JSON.stringify(opts, null, 2).replace(/^/gm, ' * ')}\n` + ' * ```\n'
     }
-    parent.push(`/**\n * 请求方法 / Request function\n${defs}${parseComment(cfg.url ? 'url: ' + cfg.url : '', true)} */`)
+    parent.push(`/**\n * 请求方法 / Request function\n${parseComment(cfg.url ? 'url: ' + cfg.url : '', true)}${defs} */`)
     if (hasData) {
       parent.push(`request(options: ${parseRequestOptions(cfg)}): Promise<any>`)
     } else {
