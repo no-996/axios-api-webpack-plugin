@@ -1,10 +1,11 @@
 {
-  "name": "axios-api-webpack-plugin",
-  "version": "1.0.0",
+  "name": "@no-996/axios-api-webpack-plugin",
+  "version": "1.0.2",
   "description": "Webpack-plugin to create declare d.ts file for axios-api.",
   "main": "index.js",
   "directories": {
-    "test": "test"
+    "test": "test",
+    "format": "xy-format"
   },
   "dependencies": {
     "colors": "^1.4.0",
@@ -23,12 +24,7 @@
     "type": "git",
     "url": "git+https://github.com/no-996/axios-api-webpack-plugin.git"
   },
-  "keywords": [
-    "axios-api",
-    "axios",
-    "webpack-plugin",
-    "webpack"
-  ],
+  "keywords": ["axios-api", "axios", "webpack-plugin", "webpack"],
   "author": "no-996",
   "license": "MIT",
   "bugs": {

@@ -37,8 +37,8 @@ const call = _.debounce(job, 200, {
 
 module.exports = class {
   constructor({ configFile, declareOutputFile }) {
-    this.configFile = path.resolve(__dirname, configFile)
-    this.declareOutputFile = path.resolve(__dirname, declareOutputFile)
+    this.configFile = path.resolve(__dirname, '../../../', configFile)
+    this.declareOutputFile = path.resolve(__dirname, '../../../', declareOutputFile)
     console.log(`Watching: `.root + `${this.configFile}`)
     call(this.configFile, this.declareOutputFile)
   }
@@ -46,7 +46,7 @@ module.exports = class {
     compiler.hooks.watchRun.tapAsync('Format', (watching, callback) => {
       const changedFiles = Object.keys(watching.watchFileSystem.watcher.mtimes)
       changedFiles.forEach((filepath) => {
-        if (this.configFile === path.resolve(__dirname, filepath)) {
+        if (this.configFile === path.resolve(__dirname, '../../../', filepath)) {
           try {
             call(this.configFile, this.declareOutputFile)
           } catch (e) {
