@@ -6,6 +6,7 @@ module.exports = {
       name: 'human',
       des: '人类',
       url: '/posts/1',
+      method: 'post',
       data: {
         a: '1',
         b: 2,

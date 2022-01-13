@@ -118,11 +118,13 @@ function parseRequestOptionsDefaultData(opts, metadata = {}, level = 0, lines = 
 function parse(cfg, parent = [], pName = '') {
   if (cfg) {
     parent.push(`\n/* ${new Array(25).fill('↓').join('')} ${pName}${cfg.name || 'empty'} ${new Array(25).fill('↓').join('')} */\n`)
-    parent.push(`/**\n ${parseComment(cfg.des || cfg.name || 'empty')}${parseComment(cfg.url ? 'url: ' + cfg.url : '', true)} */`)
+    parent.push(
+      `/**\n ${parseComment(cfg.des || cfg.name || 'empty')}${parseComment(cfg.url ? `(${cfg.method || 'get'}) ${'url: ' + cfg.url}` : '', true)} */`
+    )
     parent.push(`interface ${parseName(cfg)}Instance {`)
     if (cfg.children) {
       cfg.children.forEach((o) => {
-        parent.push(`/**\n ${parseComment(o.des || o.name)}${parseComment(o.url ? 'url: ' + o.url : '', true)} */`)
+        parent.push(`/**\n ${parseComment(o.des || o.name)}${parseComment(o.url ? `(${o.method || 'get'}) ${'url: ' + o.url}` : '', true)} */`)
         parent.push(`${o.name}:${parseName(o)}Instance`)
       })
     }
@@ -136,7 +138,9 @@ function parse(cfg, parent = [], pName = '') {
       // defs = `${' * ```\n * // 默认请求参数\n * // default request data \n' + JSON.stringify(opts, null, 2).replace(/^/gm, ' * ')}\n` + ' * ```\n'
       defs = `${' * ```\n * // 默认请求参数\n * // default request data \n' + parseRequestOptionsDefaultData(opts, cfg.metadata)}\n` + ' * ```\n'
     }
-    parent.push(`/**\n * 请求方法 / Request function\n${parseComment(cfg.url ? 'url: ' + cfg.url : '', true)} *\n${defs} */`)
+    parent.push(
+      `/**\n * 请求方法 / Request function\n${parseComment(cfg.url ? `(${cfg.method || 'get'}) ${'url: ' + cfg.url}` : '', true)} *\n${defs} */`
+    )
     if (hasData) {
       parent.push(`request(options: ${parseRequestOptions(cfg)}): Promise<any>`)
     } else {

@@ -32,13 +32,27 @@ describe('声明', function () {
     expect(comments.findIndex((o) => o === `${config.children[1].des}`)).to.be.above(-1)
   })
   it(`注释 - ${config.children[2].name} - ${config.children[2].url}`, function () {
-    expect(comments.findIndex((o) => o === `${config.children[2].name}\n- url: ${config.children[2].url}`)).to.be.above(-1)
+    expect(
+      comments.findIndex(
+        (o) => o === `${config.children[2].name}\n- (${config.children[0].children[0].method || 'get'}) url: ${config.children[2].url}`
+      )
+    ).to.be.above(-1)
   })
   it(`注释 - ${config.children[3].name} - ${config.children[3].des} - ${config.children[3].url}`, function () {
-    expect(comments.findIndex((o) => o === `${config.children[3].des}\n- url: ${config.children[3].url}`)).to.be.above(-1)
+    expect(
+      comments.findIndex(
+        (o) => o === `${config.children[3].des}\n- (${config.children[0].children[0].method || 'get'}) url: ${config.children[3].url}`
+      )
+    ).to.be.above(-1)
   })
   it(`注释 - ${config.children[0].children[0].name} - ${config.children[0].children[0].des} - ${config.children[0].children[0].url}`, function () {
-    expect(comments.findIndex((o) => o === `${config.children[0].children[0].des}\n- url: ${config.children[0].children[0].url}`)).to.be.above(-1)
+    expect(
+      comments.findIndex(
+        (o) =>
+          o ===
+          `${config.children[0].children[0].des}\n- (${config.children[0].children[0].method || 'get'}) url: ${config.children[0].children[0].url}`
+      )
+    ).to.be.above(-1)
   })
   //
   it(`实例定义 - ${config.name}`, function () {
