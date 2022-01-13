@@ -9,11 +9,11 @@ function parseName(cfg) {
     name = name.replace(/[\s\-]/g, '_')
     return name[0].toUpperCase() + name.slice(1)
   }
-  return cfg.name
+  return 'empty'
 }
 
 function parseComment(str, isSub) {
-  return str ? `* ${isSub ? '- ' : ''}${str}\n` : ''
+  return str ? `${isSub ? ' *' : '*'} ${isSub ? '- ' : ''}${str}\n` : ''
 }
 
 function parseRequestOptionsData(data, p, isRoot = false) {
@@ -73,10 +73,52 @@ function parseRequestOptions(cfg) {
   return lines.join('\n')
 }
 
+function parseRequestOptionsDefaultData(opts, metadata = {}, level = 0, lines = []) {
+  const blank1 = new Array(level * 2).fill(' ').join('')
+  const blank2 = new Array(level * 2 + 2).fill(' ').join('')
+  const blank3 = new Array(level * 2 + 4).fill(' ').join('')
+  lines.push(level > 0 ? `{` : blank1 + ` * {`)
+  for (let p in opts) {
+    const des = metadata[p]?.des || ''
+    const comment = metadata[p]?.name ? `// ${metadata[p]?.name}${des ? ' - ' + des : ''}` : ''
+    if (Array.isArray(opts[p])) {
+      lines.push(' * ' + blank2 + `"${p}": [`)
+      opts[p].forEach((o) => {
+        if (typeof o === 'object') {
+          lines.push(
+            ' * ' + blank3 + parseRequestOptionsDefaultData(o, typeof metadata[p]?.type === 'object' ? metadata[p].type : metadata[p], level + 2)
+          )
+        } else {
+          lines.push(' * ' + blank3 + (typeof o === 'number' ? o : `"${o}"`) + ',')
+        }
+      })
+      lines.push(' * ' + blank2 + `], ${comment}`)
+    } else if (typeof opts[p] === 'object') {
+      lines.push(
+        ' * ' +
+          blank2 +
+          `"${p}": ${parseRequestOptionsDefaultData(
+            opts[p],
+            typeof metadata[p]?.type === 'object' ? metadata[p].type : metadata[p],
+            level + 1
+          )}, ${comment}`
+      )
+    } else if (typeof opts[p] === 'number') {
+      lines.push(' * ' + blank2 + `"${p}": ${opts[p]}, ${comment}`)
+    } else if (typeof opts[p] === 'undefined') {
+      lines.push(' * ' + blank2 + `"${p}": undefined, ${comment}`)
+    } else {
+      lines.push(' * ' + blank2 + `"${p}": "${opts[p].toString()}", ${comment}`)
+    }
+  }
+  lines.push(' * ' + blank1 + `}`)
+  return lines.join('\n')
+}
+
 function parse(cfg, parent = [], pName = '') {
   if (cfg) {
-    parent.push(`\n/* ${new Array(25).fill('↓').join('')} ${pName}${cfg.name} ${new Array(25).fill('↓').join('')} */\n`)
-    parent.push(`/**\n ${parseComment(cfg.des || cfg.name)}${parseComment(cfg.url ? 'url: ' + cfg.url : '', true)} */`)
+    parent.push(`\n/* ${new Array(25).fill('↓').join('')} ${pName}${cfg.name || 'empty'} ${new Array(25).fill('↓').join('')} */\n`)
+    parent.push(`/**\n ${parseComment(cfg.des || cfg.name || 'empty')}${parseComment(cfg.url ? 'url: ' + cfg.url : '', true)} */`)
     parent.push(`interface ${parseName(cfg)}Instance {`)
     if (cfg.children) {
       cfg.children.forEach((o) => {
@@ -91,7 +133,8 @@ function parse(cfg, parent = [], pName = '') {
         data: cfg.data,
         params: cfg.params,
       }
-      defs = `${' * ```\n * // 默认请求参数\n * // default request data \n' + JSON.stringify(opts, null, 2).replace(/^/gm, ' * ')}\n` + ' * ```\n'
+      // defs = `${' * ```\n * // 默认请求参数\n * // default request data \n' + JSON.stringify(opts, null, 2).replace(/^/gm, ' * ')}\n` + ' * ```\n'
+      defs = `${' * ```\n * // 默认请求参数\n * // default request data \n' + parseRequestOptionsDefaultData(opts, cfg.metadata)}\n` + ' * ```\n'
     }
     parent.push(`/**\n * 请求方法 / Request function\n${parseComment(cfg.url ? 'url: ' + cfg.url : '', true)} *\n${defs} */`)
     if (hasData) {
@@ -103,10 +146,10 @@ function parse(cfg, parent = [], pName = '') {
 
     if (cfg.children) {
       cfg.children.forEach((o) => {
-        parent = [...parent, ...parse(o, [], `${pName}${cfg.name}.`)]
+        parent = [...parent, ...parse(o, [], `${pName}${cfg.name || 'empty'}.`)]
       })
     }
-    parent.push(`\n/* ${new Array(25).fill('↑').join('')} ${pName}${cfg.name} ${new Array(25).fill('↑').join('')} */\n`)
+    parent.push(`\n/* ${new Array(25).fill('↑').join('')} ${pName}${cfg.name || 'empty'} ${new Array(25).fill('↑').join('')} */\n`)
   }
   return parent
 }
@@ -115,7 +158,7 @@ module.exports = function (config) {
   let lines = parse(config)
 
   let code = [
-    `import { ApiModule, ApiModuleOptions } from '../ApiModule'`,
+    `import { ApiModuleOptions } from '../ApiModule'`,
     ...lines,
     `/**\n ${parseComment(config.des || config.name || 'root')} */`,
     `declare const instance: ${parseName(config)}Instance`,
