@@ -19,3 +19,7 @@ change url comment lines
 ## 1.0.5
 
 add comment after default data
+
+## 1.0.6
+
+add method comment
