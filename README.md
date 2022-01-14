@@ -23,3 +23,7 @@ add comment after default data
 ## 1.0.6
 
 add method comment
+
+## 1.0.7
+
+change input file from object to array
