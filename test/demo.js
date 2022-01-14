@@ -5,10 +5,10 @@ const ts = require('typescript')
 const parser = require('../parser.js')
 const expect = require('chai').expect
 // 配置
-const config = require('./config/demo')
+const options = require('./options/demo')
 
 describe('声明', function () {
-  const code = parser(config)
+  const code = parser(options)
   const outputName = __filename.match(/[^\\/]+\.js$/)[0].replace(/\.js$/, '.d.ts')
   fs.writeFileSync(path.resolve(__dirname, './code', outputName), code)
   // 解析

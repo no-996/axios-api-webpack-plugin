@@ -119,12 +119,20 @@ function parse(cfg, parent = [], pName = '') {
   if (cfg) {
     parent.push(`\n/* ${new Array(25).fill('↓').join('')} ${pName}${cfg.name || 'empty'} ${new Array(25).fill('↓').join('')} */\n`)
     parent.push(
-      `/**\n ${parseComment(cfg.des || cfg.name || 'empty')}${parseComment(cfg.url ? `(${cfg.method || 'get'}) ${'url: ' + cfg.url}` : '', true)} */`
+      `/**\n ${parseComment((cfg.name || 'empty') + (cfg.des ? ' - ' + cfg.des : ''))}${parseComment(
+        cfg.url ? `(${cfg.method || 'get'}) ${'url: ' + cfg.url}` : '',
+        true
+      )} */`
     )
     parent.push(`interface ${parseName(cfg)}Instance {`)
     if (cfg.children) {
       cfg.children.forEach((o) => {
-        parent.push(`/**\n ${parseComment(o.des || o.name)}${parseComment(o.url ? `(${o.method || 'get'}) ${'url: ' + o.url}` : '', true)} */`)
+        parent.push(
+          `/**\n ${parseComment((o.name || 'empty') + (o.des ? ' - ' + o.des : ''))}${parseComment(
+            o.url ? `(${o.method || 'get'}) ${'url: ' + o.url}` : '',
+            true
+          )} */`
+        )
         parent.push(`${o.name}:${parseName(o)}Instance`)
       })
     }
@@ -158,7 +166,13 @@ function parse(cfg, parent = [], pName = '') {
   return parent
 }
 
-module.exports = function (config) {
+module.exports = function (options) {
+  const config = {
+    name: 'root',
+    des: '根模块/root module',
+    children: options,
+  }
+
   let lines = parse(config)
 
   let code = [
