@@ -47,6 +47,8 @@ function parseRequestOptionsData(data, p, isRoot = false) {
         lines = [...lines, ...parseRequestOptionsData(type[n], n)]
       }
       lines.push(`}${isArray ? '[]' : ''}`)
+    } else {
+      lines.push(`${p}${required ? '' : '?'}:any`)
     }
   }
   return lines
