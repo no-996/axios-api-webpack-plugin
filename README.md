@@ -27,3 +27,7 @@ add method comment
 ## 1.0.7
 
 change input file from object to array
+
+## 1.0.8
+
+support urlParams ts info
