@@ -69,11 +69,18 @@ function parseRequestOptions(cfg) {
       lines.push(`params:any`)
     }
   }
+  if (cfg.metadata) {
+    if (cfg.metadata.urlParams) {
+      lines = [...lines, ...parseRequestOptionsData(cfg.metadata.urlParams, 'urlParams', true)]
+    } else if (typeof cfg.urlParams !== 'undefined') {
+      lines.push(`urlParams:any`)
+    }
+  }
   lines.push('}')
   return lines.join('\n')
 }
 
-function parseRequestOptionsDefaultData(opts, metadata = {}, level = 0, lines = []) {
+function parseRequestOptionsDefaultData(opts, metadata = {}, root = true, level = 0, lines = []) {
   const blank1 = new Array(level * 2).fill(' ').join('')
   const blank2 = new Array(level * 2 + 2).fill(' ').join('')
   const blank3 = new Array(level * 2 + 4).fill(' ').join('')
@@ -86,7 +93,9 @@ function parseRequestOptionsDefaultData(opts, metadata = {}, level = 0, lines = 
       opts[p].forEach((o) => {
         if (typeof o === 'object') {
           lines.push(
-            ' * ' + blank3 + parseRequestOptionsDefaultData(o, typeof metadata[p]?.type === 'object' ? metadata[p].type : metadata[p], level + 2)
+            ' * ' +
+              blank3 +
+              parseRequestOptionsDefaultData(o, typeof metadata[p]?.type === 'object' ? metadata[p].type : metadata[p], false, level + 2)
           )
         } else {
           lines.push(' * ' + blank3 + (typeof o === 'number' ? o : `"${o}"`) + ',')
@@ -100,13 +109,16 @@ function parseRequestOptionsDefaultData(opts, metadata = {}, level = 0, lines = 
           `"${p}": ${parseRequestOptionsDefaultData(
             opts[p],
             typeof metadata[p]?.type === 'object' ? metadata[p].type : metadata[p],
+            false,
             level + 1
           )}, ${comment}`
       )
     } else if (typeof opts[p] === 'number') {
       lines.push(' * ' + blank2 + `"${p}": ${opts[p]}, ${comment}`)
     } else if (typeof opts[p] === 'undefined') {
-      lines.push(' * ' + blank2 + `"${p}": undefined, ${comment}`)
+      if (!root) {
+        lines.push(' * ' + blank2 + `"${p}": undefined, ${comment}`)
+      }
     } else {
       lines.push(' * ' + blank2 + `"${p}": "${opts[p].toString()}", ${comment}`)
     }
@@ -136,12 +148,13 @@ function parse(cfg, parent = [], pName = '') {
         parent.push(`${o.name}:${parseName(o)}Instance`)
       })
     }
-    let hasData = cfg.data || cfg.params || (cfg.metadata && (cfg.metadata.data || cfg.metadata.params))
+    let hasData = cfg.data || cfg.params || cfg.urlParams || (cfg.metadata && (cfg.metadata.data || cfg.metadata.params || cfg.metadata.urlParams))
     let defs = ''
-    if (cfg.data || cfg.params) {
+    if (cfg.data || cfg.params || cfg.urlParams) {
       let opts = {
         data: cfg.data,
         params: cfg.params,
+        urlParams: cfg.urlParams,
       }
       // defs = `${' * ```\n * // 默认请求参数\n * // default request data \n' + JSON.stringify(opts, null, 2).replace(/^/gm, ' * ')}\n` + ' * ```\n'
       defs = `${' * ```\n * // 默认请求参数\n * // default request data \n' + parseRequestOptionsDefaultData(opts, cfg.metadata)}\n` + ' * ```\n'
