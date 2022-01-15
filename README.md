@@ -31,3 +31,7 @@ change input file from object to array
 ## 1.0.8
 
 support urlParams ts info
+
+## 1.0.9
+
+fix request comment
