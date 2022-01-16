@@ -191,7 +191,7 @@ module.exports = function (options) {
   let lines = parse(config)
 
   let code = [
-    `import { ApiModuleOptions } from '../ApiModule'`,
+    `import { ApiModuleOptions } from '@no-996/axios-api'`,
     ...lines,
     `/**\n ${parseComment(config.des || config.name || 'root')} */`,
     `declare const instance: ${parseName(config)}Instance`,
