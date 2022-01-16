@@ -188,3 +188,7 @@ Support urlParams ts info
 ### v1.0.9
 
 Fix request comment
+
+### v1.0.10
+
+Fix ApiModuleOptions import
