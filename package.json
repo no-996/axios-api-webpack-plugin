@@ -24,7 +24,7 @@
     "type": "git",
     "url": "git+https://github.com/no-996/axios-api-webpack-plugin.git"
   },
-  "keywords": ["axios-api", "axios", "webpack-plugin", "webpack"],
+  "keywords": ["axios-api", "axios-api-webpack-plugin", "axios", "webpack-plugin", "webpack", "api"],
   "author": "no-996",
   "license": "MIT",
   "bugs": {
