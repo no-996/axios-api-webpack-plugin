@@ -1,5 +1,7 @@
 # axios-api-webpack-plugin
 
+此webpack插件是服务于[axios-api](https://github.com/no-996/axios-api)的d.ts生成工具
+
 ## 目录
 
 - [安装使用](#安装使用)
