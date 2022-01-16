@@ -1,37 +1,190 @@
-# Change log
+# axios-api-webpack-plugin
 
-## 1.0.1
+此webpack插件是服务于[axios-api](https://github.com/no-996/axios-api)的d.ts生成工具
 
-fix file path resolve
+## 目录
 
-## 1.0.2
+- [安装使用](#安装使用)
+- [依赖说明](#依赖说明)
+- [版本日志](#版本日志)
 
-add url comment
+## 安装使用
 
-## 1.0.3
+```bash
+npm install --save @no-996/axios-api-webpack-plugin
+```
 
-change url comment placement
+```js
+// webpack.config.js
+// ...
+const AxiosApiWebpackPlugin = require('@no-996/axios-api-webpack-plugin')
+// ...
+module.exports = {
+  // ...
+  plugins: [
+    // ...
+    new AxiosApiWebpackPlugin({
+      // 接口定义文件
+      configFile: './src/api/options/index.js',
+      // 输出d.ts声明文件（与实例输出文件所在目录一致、文件名一致）
+      declareOutputFile: './src/api/index.d.ts',
+    }),
+    // ...
+  ]
+  // ...
+}
+```
 
-## 1.0.4
+接口定义文件示例：
 
-change url comment lines
+```js
+// src/api/options/index.js
+export default [
+  {
+    name: 'posts',
+    des: '帖子',
+    url: '/posts',
+    params: {
+      userId: undefined,
+    },
+    children: [
+      {
+        name: 'comments',
+        des: '评论',
+        url: '/posts/{postId}/comments',
+        urlParams: {
+          postId: undefined,
+        },
+        metadata: {
+          urlParams: {
+            postId: {
+              name: '帖子id',
+              required: true,
+            },
+          },
+        },
+      },
+    ],
+    metadata: {
+      params: {
+        userId: {
+          name: '用户id',
+          des: '用户唯一标识',
+          type: 'string',
+        },
+      },
+    },
+  },
+  {
+    name: 'albums',
+    url: '/albums',
+    des: '专辑',
+    params: {
+      id: undefined,
+    },
+    children: [],
+  },
+  {
+    name: 'photos',
+    url: '/photos',
+    des: '相片',
+    params: {},
+    children: [],
+    cache: 3000,
+  },
+  {
+    name: 'todos',
+    url: '/todos',
+    des: '待办事项',
+    params: {},
+    children: [],
+    cancel:'current'
+  },
+  {
+    name: 'users',
+    url: '/users',
+    des: '用户',
+    params: {},
+    children: [],
+    cancel:'previous'
+  },
+]
+```
 
-## 1.0.5
+实例输出文件示例：
 
-add comment after default data
+```js
+// src/api/index.js
+import ApiModule from '@no-996/axios-api'
 
-## 1.0.6
+import options from './options'
 
-add method comment
+export default new ApiModule(
+  // 接口定义
+  options,
+  // axios配置
+  {
+    baseURL: 'https://jsonplaceholder.typicode.com',
+    onUploadProgress: (progressEvent, percentCompleted) => {
+      console.log(percentCompleted)
+    },
+  },
+  // axios-api配置
+  {
+    cacheStorage: localStorage,
+    debug: true,
+  }
+)
+```
 
-## 1.0.7
+## 依赖说明
 
-change input file from object to array
+```json
+"dependencies": {
+  "colors": "^1.4.0",
+  "lodash": "^4.17.21",
+  "prettier": "^2.4.1"
+}
+```
 
-## 1.0.8
+## 版本日志
 
-support urlParams ts info
+### v1.0.0
 
-## 1.0.9
+First release version.
 
-fix request comment
+### v1.0.1
+
+Fix file path resolve
+
+### v1.0.2
+
+Add url comment
+
+### v1.0.3
+
+Change url comment placement
+
+### v1.0.4
+
+Change url comment lines
+
+### v1.0.5
+
+Add comment after default data
+
+### v1.0.6
+
+Add method comment
+
+### v1.0.7
+
+Change input file from object to array
+
+### v1.0.8
+
+Support urlParams ts info
+
+### v1.0.9
+
+Fix request comment
