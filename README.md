@@ -1,37 +1,86 @@
-# Change log
+# axios-api-webpack-plugin
 
-## 1.0.1
+## 目录
 
-fix file path resolve
+- [安装使用](#安装使用)
+- [依赖说明](#依赖说明)
+- [版本日志](#版本日志)
 
-## 1.0.2
+## 安装使用
 
-add url comment
+```bash
+npm install --save @no-996/axios-api-webpack-plugin
+```
 
-## 1.0.3
+```js
+// webpack.config.js
+// ...
+const AxiosApiWebpackPlugin = require('@no-996/axios-api-webpack-plugin')
+// ...
+module.exports = {
+  // ...
+  plugins: [
+    // ...
+    new AxiosApiWebpackPlugin({
+      // 接口定义文件
+      configFile: './src/api/options/index.js',
+      // 输出d.ts声明文件（不设置此配置，默认输出至接口定义文件所在的目录）
+      declareOutputFile: './src/api/index.d.ts',
+    }),
+    // ...
+  ]
+  // ...
+}
+```
 
-change url comment placement
+## 依赖说明
 
-## 1.0.4
+```json
+"dependencies": {
+  "colors": "^1.4.0",
+  "lodash": "^4.17.21",
+  "prettier": "^2.4.1"
+}
+```
 
-change url comment lines
+## 版本日志
 
-## 1.0.5
+### v1.0.0
 
-add comment after default data
+First release version.
 
-## 1.0.6
+### v1.0.1
 
-add method comment
+Fix file path resolve
 
-## 1.0.7
+### v1.0.2
 
-change input file from object to array
+Add url comment
 
-## 1.0.8
+### v1.0.3
 
-support urlParams ts info
+Change url comment placement
 
-## 1.0.9
+### v1.0.4
 
-fix request comment
+Change url comment lines
+
+### v1.0.5
+
+Add comment after default data
+
+### v1.0.6
+
+Add method comment
+
+### v1.0.7
+
+Change input file from object to array
+
+### v1.0.8
+
+Support urlParams ts info
+
+### v1.0.9
+
+Fix request comment
