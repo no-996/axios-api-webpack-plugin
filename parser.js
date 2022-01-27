@@ -16,9 +16,9 @@ function parseComment(str, isSub) {
   return str ? `${isSub ? ' *' : '*'} ${isSub ? '- ' : ''}${str}\n` : ''
 }
 
-function parseRequestOptionsData(data, p, isRoot = false) {
+function parseRequestOptionsData(data, meta, p, isRoot = false) {
   let lines = []
-  let { name, des, type, isArray, required } = data
+  let { name, des, type, isArray, required } = meta
   if (name || des) {
     lines.push(`/**\n ${parseComment(name)}${parseComment(des, name)} */`)
   }
@@ -28,13 +28,14 @@ function parseRequestOptionsData(data, p, isRoot = false) {
     } else if (typeof type === 'object') {
       lines.push(`${p}${required ? '' : '?'}:{`)
       for (let n in type) {
-        lines = [...lines, ...parseRequestOptionsData(type[n], n)]
+        lines = [...lines, ...parseRequestOptionsData(data, type[n], n)]
       }
       lines.push(`}${isArray ? '[]' : ''}`)
     } else {
       lines.push(`${p}${required ? '' : '?'}:{`)
       for (let n in data) {
-        lines = [...lines, ...parseRequestOptionsData(data[n], n)]
+        // 即使没有定义meta，至少要定义参数（类型any）
+        lines = [...lines, ...parseRequestOptionsData(data, meta[n] || 'any', n)]
       }
       lines.push(`}`)
     }
@@ -44,7 +45,7 @@ function parseRequestOptionsData(data, p, isRoot = false) {
     } else if (typeof type === 'object') {
       lines.push(`${p}${required ? '' : '?'}:{`)
       for (let n in type) {
-        lines = [...lines, ...parseRequestOptionsData(type[n], n)]
+        lines = [...lines, ...parseRequestOptionsData(data, type[n], n)]
       }
       lines.push(`}${isArray ? '[]' : ''}`)
     } else {
@@ -59,21 +60,21 @@ function parseRequestOptions(cfg) {
   lines.push('{')
   if (cfg.metadata) {
     if (cfg.metadata.data) {
-      lines = [...lines, ...parseRequestOptionsData(cfg.metadata.data, 'data', true)]
+      lines = [...lines, ...parseRequestOptionsData(cfg.data, cfg.metadata.data, 'data', true)]
     } else if (typeof cfg.data !== 'undefined') {
       lines.push(`data:any`)
     }
   }
   if (cfg.metadata) {
     if (cfg.metadata.params) {
-      lines = [...lines, ...parseRequestOptionsData(cfg.metadata.params, 'params', true)]
+      lines = [...lines, ...parseRequestOptionsData(cfg.params, cfg.metadata.params, 'params', true)]
     } else if (typeof cfg.params !== 'undefined') {
       lines.push(`params:any`)
     }
   }
   if (cfg.metadata) {
     if (cfg.metadata.urlParams) {
-      lines = [...lines, ...parseRequestOptionsData(cfg.metadata.urlParams, 'urlParams', true)]
+      lines = [...lines, ...parseRequestOptionsData(cfg.urlParams, cfg.metadata.urlParams, 'urlParams', true)]
     } else if (typeof cfg.urlParams !== 'undefined') {
       lines.push(`urlParams:any`)
     }

@@ -13,12 +13,20 @@ module.exports = [
         url: '/posts/{postId}/comments',
         urlParams: {
           postId: undefined,
+          test: undefined,
+          test2: undefined,
         },
         metadata: {
           urlParams: {
             postId: {
               name: '帖子id',
               required: true,
+            },
+            test2: {
+              type: {
+                a: '1',
+                b: '2',
+              },
             },
           },
         },
@@ -65,4 +73,3 @@ module.exports = [
     children: [],
   },
 ]
-
