@@ -1,6 +1,6 @@
 {
   "name": "@no-996/axios-api-webpack-plugin",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Webpack-plugin to create declare d.ts file for axios-api.",
   "main": "index.js",
   "directories": {

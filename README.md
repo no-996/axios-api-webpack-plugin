@@ -151,46 +151,50 @@ export default new ApiModule(
 
 ## 版本日志
 
-### v1.0.0
+### v1.0.11
 
-First release version.
+Fix param declare missing when without metadata
 
-### v1.0.1
+### v1.0.10
 
-Fix file path resolve
-
-### v1.0.2
-
-Add url comment
-
-### v1.0.3
-
-Change url comment placement
-
-### v1.0.4
-
-Change url comment lines
-
-### v1.0.5
-
-Add comment after default data
-
-### v1.0.6
-
-Add method comment
-
-### v1.0.7
-
-Change input file from object to array
-
-### v1.0.8
-
-Support urlParams ts info
+Fix ApiModuleOptions import
 
 ### v1.0.9
 
 Fix request comment
 
-### v1.0.10
+### v1.0.8
 
-Fix ApiModuleOptions import
+Support urlParams ts info
+
+### v1.0.7
+
+Change input file from object to array
+
+### v1.0.6
+
+Add method comment
+
+### v1.0.5
+
+Add comment after default data
+
+### v1.0.4
+
+Change url comment lines
+
+### v1.0.3
+
+Change url comment placement
+
+### v1.0.2
+
+Add url comment
+
+### v1.0.1
+
+Fix file path resolve
+
+### v1.0.0
+
+First release version.
