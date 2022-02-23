@@ -2,7 +2,7 @@
 
 此webpack插件是服务于[axios-api](https://github.com/no-996/axios-api)的d.ts生成工具
 
-**目前发现webpack-dev-server能够正常工作，webpack则需要设置target:'async-node'！**
+**目前发现webpack-dev-server能够正常工作，webpack（或webpack-cli）则因为代码node_modules\webpack-cli\bin\cli.js中的“require("v8-compile-cache");”一行导致此webpack插件中import异步方法失效出错！**
 
 **第一次生成d.ts文件后，vscode可能需要重启才能显示请求示例的调用提示！**
 
