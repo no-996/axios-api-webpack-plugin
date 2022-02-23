@@ -2,6 +2,8 @@
 
 此webpack插件是服务于[axios-api](https://github.com/no-996/axios-api)的d.ts生成工具
 
+**目前发现webpack-dev-server运行才能正常工作，webpack运行回出现node的import异常！**
+
 **第一次生成d.ts文件后，vscode可能需要重启才能显示请求示例的调用提示！**
 
 ## 目录
