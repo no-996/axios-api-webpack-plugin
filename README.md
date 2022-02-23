@@ -4,6 +4,14 @@
 
 **目前发现webpack-dev-server能够正常工作，webpack-cli出错则因为代码node_modules\webpack-cli\bin\cli.js中的“require("v8-compile-cache");”一行导致此webpack插件中import异步方法失效出错！（使用const webpack = require('webpack');运行webpack的方式不受影响）**
 
+*解决办法，设置nodejs环境变量DISABLE_V8_COMPILE_CACHE=1，如下：*
+
+```json
+{
+  "scripts": "cross-env DISABLE_V8_COMPILE_CACHE=1 webpack"
+}
+```
+
 **第一次生成d.ts文件后，vscode可能需要重启才能显示请求示例的调用提示！**
 
 ## 目录
