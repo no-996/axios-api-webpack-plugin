@@ -1,8 +1,8 @@
 # axios-api-webpack-plugin
 
-此webpack插件是服务于[axios-api](https://github.com/no-996/axios-api)的d.ts生成工具
+此 webpack 插件是服务于[axios-api](https://github.com/no-996/axios-api)的 d.ts 生成工具
 
-**第一次生成d.ts文件后，vscode可能需要重启才能显示请求示例的调用提示！**
+**第一次生成 d.ts 文件后，vscode 可能需要重启才能显示请求示例的调用提示！**
 
 ## 目录
 
@@ -32,7 +32,7 @@ module.exports = {
       declareOutputFile: './src/api/index.d.ts',
     }),
     // ...
-  ]
+  ],
   // ...
 }
 ```
@@ -100,7 +100,7 @@ export default [
     des: '待办事项',
     params: {},
     children: [],
-    cancel:'current'
+    cancel: 'current',
   },
   {
     name: 'users',
@@ -108,7 +108,7 @@ export default [
     des: '用户',
     params: {},
     children: [],
-    cancel:'previous'
+    cancel: 'previous',
   },
 ]
 ```
@@ -150,6 +150,10 @@ export default new ApiModule(
 ```
 
 ## 版本日志
+
+### v1.1.1
+
+Use webpack instead async import
 
 ### v1.0.11
 

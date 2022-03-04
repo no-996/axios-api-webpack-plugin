@@ -65,9 +65,10 @@ module.exports = class {
           if (memfs.fs.existsSync('/options.js')) {
             // 获取编译后的代码（内存中）
             const code = memfs.fs.readFileSync('/options.js').toString()
+            //
+            const contextObject = {}
             try {
               // 执行代码，获得对象
-              const contextObject = {}
               vm.createContext(contextObject)
               const script = new vm.Script(code)
               script.runInContext(contextObject)
