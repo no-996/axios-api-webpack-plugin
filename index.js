@@ -80,6 +80,7 @@ module.exports = class {
               // 生成声明文件
               let declares = parser(contextObject.options.default)
               fs.writeFileSync(this.declareOutputFile, declares, { flag: 'w' })
+              console.log(`Declare updated: `.changed + `${this.declareOutputFile}`)
             } catch (e) {
               console.log('生成声明文件失败：'.error)
               console.log(e)
