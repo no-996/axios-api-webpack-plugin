@@ -2,8 +2,6 @@
 
 此 webpack 插件是服务于[axios-api](https://github.com/no-996/axios-api)的 d.ts 生成工具
 
-**第一次生成 d.ts 文件后，vscode 可能需要重启才能显示请求示例的调用提示！**
-
 ## 目录
 
 - [安装使用](#安装使用)
