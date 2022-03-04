@@ -1,10 +1,8 @@
+const vm = require('vm')
+const memfs = require('memfs')
+const Webpack = require('webpack')
 const fs = require('fs')
-const path = require('path')
-const _ = require('lodash')
 const colors = require('colors')
-
-const parser = require('./parser.js')
-
 colors.setTheme({
   root: 'blue',
   error: 'red',
@@ -13,48 +11,90 @@ colors.setTheme({
   pass: 'yellow',
   changed: 'green',
 })
-
-async function job(configFile, declareOutputFile) {
-  try {
-    let packagePath = path.resolve(configFile, '../', 'package.json')
-    if (!fs.existsSync(packagePath)) {
-      fs.writeFileSync(packagePath, `{"type": "module"}`)
-    }
-    let res = await import('file:///' + configFile + `?update=${Date.now()}`)
-    let code = parser(res.default)
-    fs.writeFileSync(declareOutputFile, code, { flag: 'w' })
-    console.log(`Output: `.changed + `${declareOutputFile}`)
-  } catch (e) {
-    console.error(e)
-  }
-  console.log('--------------------')
-}
-
-const call = _.debounce(job, 200, {
-  leading: true,
-  trailing: false,
-})
+//
+const parser = require('./parser.js')
 
 module.exports = class {
-  constructor({ configFile, declareOutputFile }) {
-    this.configFile = path.resolve(__dirname, '../../../', configFile)
-    this.declareOutputFile = path.resolve(__dirname, '../../../', declareOutputFile)
+  compileStart() {
     console.log(`Watching: `.root + `${this.configFile}`)
-    call(this.configFile, this.declareOutputFile)
-  }
-  apply(compiler) {
-    compiler.hooks.watchRun.tapAsync('Format', (watching, callback) => {
-      const changedFiles = Object.keys(watching.watchFileSystem.watcher.mtimes)
-      changedFiles.forEach((filepath) => {
-        if (this.configFile === path.resolve(__dirname, '../../../', filepath)) {
-          try {
-            call(this.configFile, this.declareOutputFile)
-          } catch (e) {
-            console.error(e)
+    //
+    const compiler = Webpack(
+      {
+        entry: {
+          options: this.configFile,
+        },
+        output: {
+          path: '/',
+          filename: '[name].js',
+          library: 'options',
+          libraryTarget: 'umd',
+          umdNamedDefine: true,
+          globalObject: 'this',
+          publicPath: './',
+        },
+        watch: true,
+        module: {
+          rules: [
+            {
+              test: /\.js$/,
+              loader: 'babel-loader',
+              options: { plugins: ['@babel/plugin-proposal-optional-chaining'] },
+              exclude: /node_modules/,
+            },
+          ],
+        },
+        plugins: [
+          new Webpack.EnvironmentPlugin({
+            ...process.env,
+          }),
+        ],
+        resolve: {
+          extensions: ['*', '.ts', '.js', '.json'],
+          alias: {
+            fs: 'memfs',
+          },
+        },
+        node: {
+          __filename: true,
+        },
+      },
+      (err) => {
+        if (err) {
+          console.log(err.toString().error)
+        } else {
+          if (memfs.fs.existsSync('/options.js')) {
+            // 获取编译后的代码（内存中）
+            const code = memfs.fs.readFileSync('/options.js').toString()
+            try {
+              // 执行代码，获得对象
+              const contextObject = {}
+              vm.createContext(contextObject)
+              const script = new vm.Script(code)
+              script.runInContext(contextObject)
+            } catch (e) {
+              console.log('代码执行失败：'.error)
+              console.log(e)
+            }
+            try {
+              // 生成声明文件
+              let declares = parser(contextObject.options.default)
+              fs.writeFileSync(this.declareOutputFile, declares, { flag: 'w' })
+            } catch (e) {
+              console.log('生成声明文件失败：'.error)
+              console.log(e)
+            }
           }
         }
-      })
-      callback()
-    })
+      }
+    )
+
+    compiler.inputFileSystem = fs
+    compiler.outputFileSystem = memfs.fs
   }
+  constructor({ configFile, declareOutputFile }) {
+    this.configFile = configFile
+    this.declareOutputFile = declareOutputFile
+    this.compileStart()
+  }
+  apply() {}
 }

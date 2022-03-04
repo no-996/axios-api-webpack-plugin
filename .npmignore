@@ -4,3 +4,4 @@ node_modules
 .npmignore
 .editorconfig
 test
+package-lock.json
