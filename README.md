@@ -149,6 +149,14 @@ export default new ApiModule(
 
 ## 版本日志
 
+### v1.1.3
+
+Add axios instance declear
+
+### v1.1.2
+
+Add console words
+
 ### v1.1.1
 
 Use webpack instead async import
