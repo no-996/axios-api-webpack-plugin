@@ -170,6 +170,8 @@ function parse(cfg, parent = [], pName = '') {
     } else {
       parent.push(`request(options: ApiModuleOptions): Promise<any>`)
     }
+    parent.push(`/**\n * Axios 实例 / Axios instance\n */`)
+    parent.push(`axiosInstance: AxiosInstance`)
     parent.push(`}`)
 
     if (cfg.children) {
@@ -192,6 +194,7 @@ module.exports = function (options) {
   let lines = parse(config)
 
   let code = [
+    `import { AxiosInstance } from 'axios'`,
     `import { ApiModuleOptions } from '@no-996/axios-api'`,
     ...lines,
     `/**\n ${parseComment(config.des || config.name || 'root')} */`,
