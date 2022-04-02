@@ -200,7 +200,7 @@ module.exports = function (options) {
     children: options
   };
   let lines = parse(config);
-  let code = [`import { AxiosInstance } from 'axios'`, `import { ApiModuleOptions } from '@no-996/axios-api'`, ...lines, `/**\n ${parseComment(config.des || config.name || 'root')} */`, `declare const instance: ${parseName(config)}Instance`, `export default instance`, `/**\n 根模块类型声明/root module declare */`, `export { RootInstance as Api }`].join('\n'); 
+  let code = [`import { AxiosInstance } from 'axios'`, `import { ApiModuleOptions } from '@no-996/axios-api'`, ...lines, `/**\n ${parseComment(config.des || config.name || 'root')} */`, `declare const instance: ${parseName(config)}Instance`, `export default instance`, `/**\n ${parseComment('根模块类型声明/root module declare')} */`, `export { RootInstance as Api }`].join('\n'); 
   // console.log(code)
 
   let format = prettier.format(code, {
@@ -209,7 +209,8 @@ module.exports = function (options) {
     semi: false,
     arrowParens: 'always',
     printWidth: 150
-  }); // console.log(format)
+  }); 
+  // console.log(format)
   // console.log(format.substr(0, 200))
   // fs.writeFileSync(declareOutputFile, format, { flag: 'w' })
 
