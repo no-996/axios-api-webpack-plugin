@@ -200,7 +200,8 @@ module.exports = function (options) {
     children: options
   };
   let lines = parse(config);
-  let code = [`import { AxiosInstance } from 'axios'`, `import { ApiModuleOptions } from '@no-996/axios-api'`, ...lines, `/**\n ${parseComment(config.des || config.name || 'root')} */`, `declare const instance: ${parseName(config)}Instance`, `export default instance`].join('\n'); // console.log(code)
+  let code = [`import { AxiosInstance } from 'axios'`, `import { ApiModuleOptions } from '@no-996/axios-api'`, ...lines, `/**\n ${parseComment(config.des || config.name || 'root')} */`, `declare const instance: ${parseName(config)}Instance`, `export default instance`, `/**\n 根模块类型声明/root module declare */`, `export { RootInstance as Api }`].join('\n'); 
+  // console.log(code)
 
   let format = prettier.format(code, {
     parser: 'typescript',
