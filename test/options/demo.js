@@ -63,13 +63,39 @@ module.exports = [
     url: '/todos',
     des: '待办事项',
     params: {},
-    children: [],
+    children: [
+      {
+        name: 'same',
+        url: '/same',
+        des: '同名测试',
+        children: [
+          {
+            name: 'same2',
+            url: '/same2',
+            des: '同名测试2',
+          },
+        ],
+      },
+    ],
   },
   {
     name: 'users',
     url: '/users',
     des: '用户',
     params: {},
-    children: [],
+    children: [
+      {
+        name: 'same',
+        url: '/same',
+        des: '同名测试',
+        children: [
+          {
+            name: 'same2',
+            url: '/same2',
+            des: '同名测试2',
+          },
+        ],
+      },
+    ],
   },
 ]

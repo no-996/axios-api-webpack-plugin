@@ -129,6 +129,13 @@ function parseRequestOptionsDefaultData(opts, metadata = {}, root = true, level 
 
 function parse(cfg, parent = [], pName = '') {
   if (cfg) {
+    const prefix = pName
+      .split('.')
+      .filter((o) => o) // 去除最后一级空
+      .slice(1) // 去除Root
+      .map((o) => o[0].toUpperCase() + o.substring(1)) // 首字母大写
+      .join('')
+
     parent.push(`\n/* ${new Array(25).fill('↓').join('')} ${pName}${cfg.name || 'empty'} ${new Array(25).fill('↓').join('')} */\n`)
     parent.push(
       `/**\n ${parseComment((cfg.name || 'empty') + (cfg.des ? ' - ' + cfg.des : ''))}${parseComment(
@@ -136,7 +143,8 @@ function parse(cfg, parent = [], pName = '') {
         true
       )} */`
     )
-    parent.push(`interface ${parseName(cfg)}Instance {`)
+    // 增加父级
+    parent.push(`interface ${prefix}${parseName(cfg)}Instance {`)
     if (cfg.children) {
       cfg.children.forEach((o) => {
         parent.push(
@@ -145,7 +153,11 @@ function parse(cfg, parent = [], pName = '') {
             true
           )} */`
         )
-        parent.push(`${o.name}:${parseName(o)}Instance`)
+
+        // 增加父级
+        let parentName = parseName(cfg)
+        let pre = parentName === 'Root' ? '' : `${prefix}${parentName}`
+        parent.push(`${o.name}:${pre}${parseName(o)}Instance`)
       })
     }
     let hasData = cfg.data || cfg.params || cfg.urlParams || (cfg.metadata && (cfg.metadata.data || cfg.metadata.params || cfg.metadata.urlParams))
