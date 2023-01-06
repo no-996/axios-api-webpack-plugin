@@ -149,6 +149,18 @@ export default new ApiModule(
 
 ## 版本日志
 
+### v1.1.6
+
+Mix parent declare name
+
+### v1.1.5
+
+bug fix
+
+### v1.1.4
+
+bug fix
+
 ### v1.1.3
 
 Add axios instance declear
